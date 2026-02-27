@@ -10,6 +10,11 @@ import remarkParse from "remark-parse";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 const starterMarkdown = `# Split Markdown Editor
 
@@ -46,7 +51,9 @@ export default function Home() {
       return storedTheme;
     }
 
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
     return prefersDark ? "dark" : "light";
   });
 
@@ -62,15 +69,19 @@ export default function Home() {
   }, [markdown]);
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_right,#d8f4e9_0%,transparent_35%),radial-gradient(circle_at_left_bottom,#f4dfbf_0%,transparent_30%),oklch(0.98_0.01_90)] p-4 dark:bg-[radial-gradient(circle_at_top_right,#1d3b32_0%,transparent_38%),radial-gradient(circle_at_left_bottom,#3d2f1c_0%,transparent_34%),oklch(0.19_0.01_240)] md:p-6">
-      <section className="mx-auto w-full max-w-7xl">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_right,#d8f4e9_0%,transparent_35%),radial-gradient(circle_at_left_bottom,#f4dfbf_0%,transparent_30%),oklch(0.98_0.01_90)] p-4 dark:bg-[radial-gradient(circle_at_top_right,#1d3b32_0%,transparent_38%),radial-gradient(circle_at_left_bottom,#3d2f1c_0%,transparent_34%),oklch(0.19_0.01_240)]">
+      <section className="mx-auto w-full">
         <header className="mb-4 flex items-center justify-between">
-          <h1 className="text-xl font-semibold tracking-tight md:text-2xl">Markdown Editor</h1>
+          <h1 className="text-xl font-semibold tracking-tight md:text-2xl">
+            Markdown Editor
+          </h1>
           <div className="flex items-center gap-2">
             <Badge variant="secondary">Split View</Badge>
             <button
               type="button"
-              onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+              onClick={() =>
+                setTheme((current) => (current === "dark" ? "light" : "dark"))
+              }
               className="inline-flex h-8 items-center rounded-md border border-border bg-card px-3 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-accent"
               aria-label="Toggle dark mode"
             >
@@ -79,30 +90,45 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <Card className="gap-0">
-            <CardHeader className="border-b">
-              <CardTitle className="text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Editor</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <Textarea
-                className="min-h-[65vh] resize-none rounded-none border-0 font-mono text-sm shadow-none focus-visible:ring-0"
-                value={markdown}
-                onChange={(event) => setMarkdown(event.target.value)}
-                spellCheck={false}
-                aria-label="Markdown editor input"
-              />
-            </CardContent>
-          </Card>
+        <div className="w-full">
+          <ResizablePanelGroup>
+            <ResizablePanel>
+              <Card className="gap-0 min-h-screen rounded-sm">
+                <CardHeader className="border-b">
+                  <CardTitle className="text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                    Editor
+                  </CardTitle>
+                  <div>Buttons here</div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <Textarea
+                    className="min-h-[65vh] resize-none rounded-none border-0 font-mono text-sm shadow-none focus-visible:ring-0"
+                    value={markdown}
+                    onChange={(event) => setMarkdown(event.target.value)}
+                    spellCheck={false}
+                    aria-label="Markdown editor input"
+                  />
+                </CardContent>
+              </Card>
+            </ResizablePanel>
+            <ResizableHandle />
 
-          <Card className="gap-0">
-            <CardHeader className="border-b">
-              <CardTitle className="text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Preview</CardTitle>
-            </CardHeader>
-            <CardContent className="min-h-[65vh] overflow-auto p-5">
-              <article className="markdown-content" dangerouslySetInnerHTML={{ __html: previewHtml }} />
-            </CardContent>
-          </Card>
+            <ResizablePanel>
+              <Card className="gap-0 min-h-screen rounded-sm">
+                <CardHeader className="border-b">
+                  <CardTitle className="text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                    Preview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="min-h-[65vh] overflow-auto p-5">
+                  <article
+                    className="markdown-content"
+                    dangerouslySetInnerHTML={{ __html: previewHtml }}
+                  />
+                </CardContent>
+              </Card>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>
       </section>
     </main>
